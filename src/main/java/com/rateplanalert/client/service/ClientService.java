@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.rateplanalert.client.domain.Client;
 import com.rateplanalert.client.repository.ClientRepository;
+import com.rateplanalert.controller.NotFoundException;
 
 import lombok.AllArgsConstructor;
 
@@ -28,12 +29,17 @@ public class ClientService {
 
     public Client findById(Long id) {
         return clientRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Client Not Found"));
+            .orElseThrow(() -> new NotFoundException("Client Not Found"));
     }
 
     @Transactional
     public void update(Long id, Client updatedClient) {
         Client client = findById(id);
         client.update(updatedClient);
+    }
+
+    @Transactional
+    public void deleteById(Long id) {
+        clientRepository.deleteById(id);
     }
 }

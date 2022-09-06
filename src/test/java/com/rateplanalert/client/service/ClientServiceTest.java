@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.rateplanalert.client.domain.Client;
+import com.rateplanalert.controller.NotFoundException;
 
 @SpringBootTest
 @Transactional
@@ -91,5 +92,22 @@ public class ClientServiceTest {
             () -> assertThat(actual.getPhoneModel()).isEqualTo(updatedClient.getPhoneModel()),
             () -> assertThat(actual.getPhoneNumber()).isEqualTo(updatedClient.getPhoneNumber())
         );
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    @DisplayName("고객의 정보를 삭제한다.")
+    void delete() {
+        // given
+        Client client = new Client("강승주", "iphone mini 12", "010-0999-4482");
+        clientService.save(client);
+
+        // when
+        clientService.deleteById(client.getId());
+
+        // then
+        assertThatThrownBy(() -> clientService.findById(client.getId()))
+            .isInstanceOf(NotFoundException.class)
+            .hasMessageContaining("Client Not Found");
     }
 }

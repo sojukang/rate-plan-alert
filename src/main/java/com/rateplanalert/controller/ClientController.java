@@ -1,6 +1,7 @@
 package com.rateplanalert.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,5 +44,11 @@ public class ClientController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateClient(@PathVariable Long clientId, @RequestBody ClientUpdateRequest request) {
         clientService.update(clientId, request.toEntity());
+    }
+
+    @DeleteMapping("/{clientId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteClient(@PathVariable Long clientId) {
+        clientService.deleteById(clientId);
     }
 }

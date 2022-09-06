@@ -103,4 +103,21 @@ public class ClientAcceptanceTest extends AcceptanceTest {
             .body("phoneModel", equalTo("updated phoneModel"))
             .body("phoneNumber", equalTo("updated phoneNumber"));
     }
+
+    @Test
+    @DisplayName("고객의 정보를 삭제한다.")
+    void delete() {
+        // given
+        ClientRequest request = new ClientRequest("강승주", "iphone mini 12", "010-0999-4482");
+        post("/api/clients", request)
+            .statusCode(HttpStatus.CREATED.value());
+
+        // when
+        delete("/api/clients/1")
+            .statusCode(HttpStatus.NO_CONTENT.value());
+
+        // then
+        get("/api/clients/1")
+            .statusCode(HttpStatus.NOT_FOUND.value());
+    }
 }
