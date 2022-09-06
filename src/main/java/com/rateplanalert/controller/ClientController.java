@@ -2,6 +2,7 @@ package com.rateplanalert.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +27,14 @@ public class ClientController {
     }
 
     @GetMapping()
+    @ResponseStatus(HttpStatus.OK)
     public ClientsResponse findAllClients() {
         return ClientsResponse.from(clientService.findAll());
+    }
+
+    @GetMapping("/{clientId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ClientResponse findClient(@PathVariable Long clientId) {
+        return ClientResponse.from(clientService.findById(clientId));
     }
 }
