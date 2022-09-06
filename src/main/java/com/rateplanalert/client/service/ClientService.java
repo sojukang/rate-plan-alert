@@ -30,4 +30,10 @@ public class ClientService {
         return clientRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Client Not Found"));
     }
+
+    @Transactional
+    public void update(Long id, Client updatedClient) {
+        Client client = findById(id);
+        client.update(updatedClient);
+    }
 }

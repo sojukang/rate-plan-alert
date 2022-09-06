@@ -70,4 +70,26 @@ public class ClientServiceTest {
             () -> assertThat(actual.get(1).getName()).isEqualTo("sojukang")
         );
     }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    @DisplayName("고객의 정보를 수정한다.")
+    void update() {
+        // given
+        Client client = new Client("강승주", "iphone mini 12", "010-0999-4482");
+        clientService.save(client);
+
+        Client updatedClient = new Client("updated name", "updated phone model", "updated phone number");
+
+        // when
+        clientService.update(client.getId(), updatedClient);
+        Client actual = clientService.findById(client.getId());
+
+        // then
+        assertAll(
+            () -> assertThat(actual.getName()).isEqualTo(updatedClient.getName()),
+            () -> assertThat(actual.getPhoneModel()).isEqualTo(updatedClient.getPhoneModel()),
+            () -> assertThat(actual.getPhoneNumber()).isEqualTo(updatedClient.getPhoneNumber())
+        );
+    }
 }

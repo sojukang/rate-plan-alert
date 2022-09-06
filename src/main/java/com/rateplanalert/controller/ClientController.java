@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -36,5 +37,11 @@ public class ClientController {
     @ResponseStatus(HttpStatus.OK)
     public ClientResponse findClient(@PathVariable Long clientId) {
         return ClientResponse.from(clientService.findById(clientId));
+    }
+
+    @PutMapping("/{clientId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateClient(@PathVariable Long clientId, @RequestBody ClientUpdateRequest request) {
+        clientService.update(clientId, request.toEntity());
     }
 }

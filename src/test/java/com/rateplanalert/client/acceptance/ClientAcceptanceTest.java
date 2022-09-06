@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 
 import com.rateplanalert.controller.ClientRequest;
 import com.rateplanalert.controller.ClientResponse;
+import com.rateplanalert.controller.ClientUpdateRequest;
 import com.rateplanalert.controller.ClientsResponse;
 
 public class ClientAcceptanceTest extends AcceptanceTest {
@@ -80,4 +81,26 @@ public class ClientAcceptanceTest extends AcceptanceTest {
         );
     }
 
+    @Test
+    @DisplayName("고객의 정보를 수정한다.")
+    void update() {
+        // given
+        ClientRequest request = new ClientRequest("강승주", "iphone mini 12", "010-0999-4482");
+        post("/api/clients", request)
+            .statusCode(HttpStatus.CREATED.value());
+
+        // when
+        ClientUpdateRequest updateRequest = new ClientUpdateRequest("updated name", "updated phoneModel",
+            "updated phoneNumber");
+        put("/api/clients/1", updateRequest)
+            .statusCode(HttpStatus.NO_CONTENT.value());
+
+        // then
+        get("/api/clients/1")
+            .statusCode(HttpStatus.OK.value())
+            .assertThat()
+            .body("name", equalTo("updated name"))
+            .body("phoneModel", equalTo("updated phoneModel"))
+            .body("phoneNumber", equalTo("updated phoneNumber"));
+    }
 }

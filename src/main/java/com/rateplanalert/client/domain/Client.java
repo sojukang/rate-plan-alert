@@ -29,4 +29,10 @@ public class Client {
         this.phoneModel = phoneModel;
         this.phoneNumber = phoneNumber;
     }
+
+    public void update(Client updatedClient) {
+        this.name = updatedClient.name;
+        this.phoneModel = updatedClient.phoneModel;
+        this.phoneNumber = updatedClient.phoneNumber;
+    }
 }
