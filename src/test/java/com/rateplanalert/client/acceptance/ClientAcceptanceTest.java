@@ -52,4 +52,32 @@ public class ClientAcceptanceTest extends AcceptanceTest {
             .assertThat()
             .body("name", equalTo("강승주"));
     }
+
+    @Test
+    @DisplayName("모든 고객의 정보를 조회한다.")
+    void findAllClient() {
+        // when
+        ClientRequest request1 = new ClientRequest("강승주", "iphone mini 12", "010-0999-4482");
+        post("/api/clients", request1)
+            .statusCode(HttpStatus.CREATED.value());
+
+        ClientRequest request2 = new ClientRequest("sojukang", "Galaxy note 8", "010-0999-4483");
+        post("/api/clients", request2)
+            .statusCode(HttpStatus.CREATED.value());
+
+        // then
+        List<ClientResponse> clients = get("/api/clients")
+            .statusCode(HttpStatus.OK.value())
+            .extract()
+            .body()
+            .jsonPath().getObject(".", ClientsResponse.class)
+            .getClients();
+
+        Assertions.assertAll(
+            () -> assertThat(clients).hasSize(2),
+            () -> assertThat(clients.get(0).getName()).isEqualTo("강승주"),
+            () -> assertThat(clients.get(1).getName()).isEqualTo("sojukang")
+        );
+    }
+
 }

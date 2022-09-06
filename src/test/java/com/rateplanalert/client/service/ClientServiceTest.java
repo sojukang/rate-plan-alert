@@ -1,6 +1,9 @@
 package com.rateplanalert.client.service;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,5 +47,27 @@ public class ClientServiceTest {
 
         // then
         assertThat(actual.getName()).isEqualTo("강승주");
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    @DisplayName("모든 고객의 정보를 조회한다.")
+    void findAll() {
+        // given
+        Client client1 = new Client("강승주", "iphone mini 12", "010-0999-4482");
+        clientService.save(client1);
+
+        Client client2 = new Client("sojukang", "Galaxy note 8", "010-0999-4483");
+        clientService.save(client2);
+
+        // when
+        List<Client> actual = clientService.findAll();
+
+        // then
+        assertAll(
+            () -> assertThat(actual).hasSize(2),
+            () -> assertThat(actual.get(0).getName()).isEqualTo("강승주"),
+            () -> assertThat(actual.get(1).getName()).isEqualTo("sojukang")
+        );
     }
 }
